@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_scroll_to_index/provider/tabProvider.dart';
 import 'package:flutter_scroll_to_index/scroll_to_index.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => TabProvider()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

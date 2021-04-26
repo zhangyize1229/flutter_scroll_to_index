@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_scroll_to_index/provider/tabProvider.dart';
+import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 class ScrollToIndexConfig {
   static AutoScrollController autoScrollController;
 
-  static void Function(int index) onChanged;
+  // static void Function(int index) onChanged;
 
   static scrollTo(index) {
     autoScrollController.scrollToIndex(index,
         preferPosition: AutoScrollPosition.middle);
-    onChanged?.call(index);
+    // onChanged?.call(index);
   }
 }
 
@@ -29,17 +31,17 @@ class ScrollToIndex extends StatefulWidget {
 }
 
 class _ScrollToIndexState extends State<ScrollToIndex> {
-  int currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
 
-    ScrollToIndexConfig.onChanged = (int index) {
-      print(index);
-      currentIndex = index;
-      setState(() {});
-    };
+    // ScrollToIndexConfig.onChanged = (int index) {
+    //   print(index);
+    //   currentIndex = index;
+    //   setState(() {});
+    // };
+
     ScrollToIndexConfig.autoScrollController = AutoScrollController(
         viewportBoundaryGetter: () =>
             Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
@@ -59,6 +61,7 @@ class _ScrollToIndexState extends State<ScrollToIndex> {
   }
 
   Widget _item(BuildContext context, int index) {
+    int currentIndex = context.read<TabProvider>().currentIndex;
     return _wrapScrollTag(
       index: index,
       child: GestureDetector(
@@ -81,10 +84,9 @@ class _ScrollToIndexState extends State<ScrollToIndex> {
               )),
         ),
         onTap: () {
-          setState(() {
-            currentIndex = index;
-            ScrollToIndexConfig.scrollTo(index);
-          });
+          Provider.of<TabProvider>(context,listen: false).onChange(index);
+          ScrollToIndexConfig.scrollTo(index);
+          setState(() {});
           widget.scrollableTabsCallBack(index);
         },
       ),

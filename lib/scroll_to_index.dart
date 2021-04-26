@@ -1,13 +1,15 @@
-
 import 'package:flutter/material.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 class ScrollToIndexConfig {
   static AutoScrollController autoScrollController;
 
+  static void Function(int index) onChanged;
+
   static scrollTo(index) {
     autoScrollController.scrollToIndex(index,
         preferPosition: AutoScrollPosition.middle);
+    onChanged?.call(index);
   }
 }
 
@@ -27,12 +29,17 @@ class ScrollToIndex extends StatefulWidget {
 }
 
 class _ScrollToIndexState extends State<ScrollToIndex> {
-  int currentIndex =0;
-
+  int currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
+
+    ScrollToIndexConfig.onChanged = (int index) {
+      print(index);
+      currentIndex = index;
+      setState(() {});
+    };
     ScrollToIndexConfig.autoScrollController = AutoScrollController(
         viewportBoundaryGetter: () =>
             Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
@@ -75,7 +82,7 @@ class _ScrollToIndexState extends State<ScrollToIndex> {
         ),
         onTap: () {
           setState(() {
-            currentIndex=index;
+            currentIndex = index;
             ScrollToIndexConfig.scrollTo(index);
           });
           widget.scrollableTabsCallBack(index);

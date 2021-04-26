@@ -10,6 +10,7 @@ class TabProvider with ChangeNotifier , DiagnosticableTreeMixin{
 
   void onChange(index){
     _currentIndex=index;
+    notifyListeners();
   }
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
